@@ -1,3 +1,5 @@
+import time
+
 import xtrack as xt
 import xdeps as xd
 from var_limits import set_var_limits_and_steps
@@ -153,6 +155,7 @@ def bdump(tw):
 # LessThan = xt.LessThanAux
 GreaterThan = xt.GreaterThan
 LessThan = xt.LessThan
+Range = xt.Range
 opt2 = lhc.lhcb1.match(
     solve=False,
     ele_start="ip5",
@@ -166,6 +169,7 @@ opt2 = lhc.lhcb1.match(
         Target("betx", GreaterThan(430), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(145), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(170), at="tcdsa.4l6.b1",tag="tcdq"),
+        # Target("dx", Range(-0.7, 0.7), at="mqy.5l6.b1",tag="disp"),
         Target("dx", GreaterThan(-0.7 * 1.0), at="mqy.5l6.b1",tag="disp"),
         Target("dx", LessThan(0.7 * 1.0), at="mqy.5l6.b1", tag="disp"),
         Target("dx", GreaterThan(-0.7 * 1.0), at="mqy.4r6.b1", tag="disp"),
@@ -185,7 +189,6 @@ opt2 = lhc.lhcb1.match(
     vary=[],
 )
 
-
 opt = lhc.lhcb1.match(
     solve=False,assert_within_tol=False,
     targets=opt1.targets + opt2.targets,
@@ -194,46 +197,60 @@ opt = lhc.lhcb1.match(
 
 degx, degy = get_phase(lhc)
 
-while degx < -33:
-    opt.targets[14].value -= 0.002; opt.step(40); degx, degy = get_phase(lhc)
+t1 = time.time()
+while degx < -30:
+    opt.targets[14].value -= 0.002; opt.step(20); degx, degy = get_phase(lhc)
     print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
+t2 = time.time()
 
-# Clean up the solution
-opt.solve()
-opt.solve()
-opt.solve()
-opt.solve()
-opt.solve()
-opt.solve()
-opt.solve()
+print('Refining solution')
+t3 = time.time()
+pen = opt.log().penalty[-1]
+while pen>1e-9:
+    opt.step(20); degx, degy = get_phase(lhc)
+    pen = opt.log().penalty[-1]
+    tol_met = opt.log().tol_met[-1]
+    print(f'phix = {degx:.2f} deg, penalty = {pen}')
+    if np.isnan(pen):
+        break
 
-# prrrr
+t4 = time.time()
+print(f'Initial solution took {t2-t1:.2f} s')
+print(f'Refining solution took {t4-t3:.2f} s')
 
-# for tt in opt.targets:
-#     if hasattr(tt, "freeze"):
-#         tt.freeze()
+knobs_initial = opt.get_knob_values(0)
+knobs_solution = opt.get_knob_values()
+lhc.metadata["knobs_solution"] = knobs_solution
+lhc.to_json("hllhc_optimized_mkdtct.json")
 
-# for tt in opt.targets:
-#     if hasattr(tt, "freeze"):
-#         tt.unfreeze()
+lhc.vars.update(knobs_initial)
+tw0 = lhc.lhcb1.twiss()
 
-# opt.target_status()
-# opt.disable_targets(tag='mkdtct')
-# opt.disable_targets(tag='tcdq')
-# opt.disable_targets(tag='dump')
-# opt.disable_targets(tag='mkdtcdq')
-# opt.target_status()
-# opt.targets[20].active=True
+lhc.vars.update(knobs_solution)
+tw1 = lhc.lhcb1.twiss()
 
-# opt.targets[14].active=False
-# opt.targets[18].active=False
-# opt.targets[24].active=False
+s_elem = lhc.lhcb1.get_s_position()
+k1 = lhc.lhcb1.attr["k1"]
+l = lhc.lhcb1.attr["length"]
 
+import matplotlib.pyplot as plt
+plt.close("all")
 
-# (-48.99239596993709, -51.28015004637074)
-# opt.targets[20].active=True
+plt.figure(1)
+ax1 = plt.subplot(3, 1, 1)
+mask= np.abs(k1*l) > 0
+ax1.bar(np.array(s_elem)[mask], (k1*l)[mask], width=l[mask], align='edge')
+ax1.axhline(0, color='k')
+ax1.set_ylabel('k1l')
+ax2 = plt.subplot(3, 1, 2, sharex=ax1)
+ax2.plot(tw0.s, tw0.betx, label='initial')
+ax2.plot(tw1.s, tw1.betx, label='optimized')
+ax2.set_ylabel(r"$\beta_x$ [m]")
+ax2.legend()
+ax3 = plt.subplot(3, 1, 3, sharex=ax1, sharey=ax2)
+ax3.plot(tw0.s, tw0.bety, label='initial')
+ax3.plot(tw1.s, tw1.bety, label='optimized')
+ax3.set_ylabel(r"$\beta_y$ [m]")
+ax3.legend()
+plt.show()
 
-# for tt in opt.targets:
-#     tt.zero_on_tol = True
-
-# opt.solve();opt.log()
