@@ -166,10 +166,10 @@ opt2 = lhc.lhcb1.match(
         Target("betx", GreaterThan(430), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(145), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(170), at="tcdsa.4l6.b1",tag="tcdq"),
-        Target("dx", GreaterThan(-0.7 * 1.05), at="mqy.5l6.b1",tag="disp"),
-        Target("dx", LessThan(0.7 * 1.05), at="mqy.5l6.b1", tag="disp"),
-        Target("dx", GreaterThan(-0.7 * 1.05), at="mqy.4r6.b1", tag="disp"),
-        Target("dx", LessThan(0.7 * 1.05), at="mqy.4r6.b1", tag="disp"),
+        Target("dx", GreaterThan(-0.7 * 1.0), at="mqy.5l6.b1",tag="disp"),
+        Target("dx", LessThan(0.7 * 1.0), at="mqy.5l6.b1", tag="disp"),
+        Target("dx", GreaterThan(-0.7 * 1.0), at="mqy.4r6.b1", tag="disp"),
+        Target("dx", LessThan(0.7 * 1.0), at="mqy.4r6.b1", tag="disp"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcsp.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcsp.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcdqa.b4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
@@ -178,7 +178,7 @@ opt2 = lhc.lhcb1.match(
         TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcdqa.c4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcdqa.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcdqa.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
-        Target(bdump, GreaterThan(4500 * 0.95), tag="dump"),
+        Target(bdump, GreaterThan(4500 * 0.9999), tag="dump"),
         Target(bxdump,GreaterThan(4000), tag="dump"),
         Target(bydump,GreaterThan(3200), tag="dump"),
     ],
@@ -196,35 +196,44 @@ degx, degy = get_phase(lhc)
 
 while degx < -33:
     opt.targets[14].value -= 0.002; opt.step(40); degx, degy = get_phase(lhc)
-    print(degx, degy)
+    print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
 
-prrrr
+# Clean up the solution
+opt.solve()
+opt.solve()
+opt.solve()
+opt.solve()
+opt.solve()
+opt.solve()
+opt.solve()
 
-for tt in opt.targets:
-    if hasattr(tt, "freeze"):
-        tt.freeze()
+# prrrr
 
-for tt in opt.targets:
-    if hasattr(tt, "freeze"):
-        tt.unfreeze()
+# for tt in opt.targets:
+#     if hasattr(tt, "freeze"):
+#         tt.freeze()
 
-opt.target_status()
-opt.disable_targets(tag='mkdtct')
-opt.disable_targets(tag='tcdq')
-opt.disable_targets(tag='dump')
-opt.disable_targets(tag='mkdtcdq')
-opt.target_status()
-opt.targets[20].active=True
+# for tt in opt.targets:
+#     if hasattr(tt, "freeze"):
+#         tt.unfreeze()
 
-opt.targets[14].active=False
-opt.targets[18].active=False
-opt.targets[24].active=False
+# opt.target_status()
+# opt.disable_targets(tag='mkdtct')
+# opt.disable_targets(tag='tcdq')
+# opt.disable_targets(tag='dump')
+# opt.disable_targets(tag='mkdtcdq')
+# opt.target_status()
+# opt.targets[20].active=True
+
+# opt.targets[14].active=False
+# opt.targets[18].active=False
+# opt.targets[24].active=False
 
 
-(-48.99239596993709, -51.28015004637074)
-opt.targets[20].active=True
+# (-48.99239596993709, -51.28015004637074)
+# opt.targets[20].active=True
 
-for tt in opt.targets:
-    tt.zero_on_tol = True
+# for tt in opt.targets:
+#     tt.zero_on_tol = True
 
-opt.solve();opt.log()
+# opt.solve();opt.log()
