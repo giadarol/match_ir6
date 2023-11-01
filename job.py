@@ -166,10 +166,10 @@ opt2 = lhc.lhcb1.match(
         Target("betx", GreaterThan(430), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(145), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(170), at="tcdsa.4l6.b1",tag="tcdq"),
-        Target("dx", GreaterThan(-0.7 * 1.1), at="mqy.5l6.b1",tag="disp"),
-        Target("dx", LessThan(0.7 * 1.1), at="mqy.5l6.b1", tag="disp"),
-        Target("dx", GreaterThan(-0.7 * 1.1), at="mqy.4r6.b1", tag="disp"),
-        Target("dx", LessThan(0.7 * 1.1), at="mqy.4r6.b1", tag="disp"),
+        Target("dx", GreaterThan(-0.7 * 1.05), at="mqy.5l6.b1",tag="disp"),
+        Target("dx", LessThan(0.7 * 1.05), at="mqy.5l6.b1", tag="disp"),
+        Target("dx", GreaterThan(-0.7 * 1.05), at="mqy.4r6.b1", tag="disp"),
+        Target("dx", LessThan(0.7 * 1.05), at="mqy.4r6.b1", tag="disp"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcsp.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcsp.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcdqa.b4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
@@ -178,7 +178,7 @@ opt2 = lhc.lhcb1.match(
         TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcdqa.c4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcdqa.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcdqa.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
-        Target(bdump, GreaterThan(4500 * 0.9), tag="dump"),
+        Target(bdump, GreaterThan(4500 * 0.95), tag="dump"),
         Target(bxdump,GreaterThan(4000), tag="dump"),
         Target(bydump,GreaterThan(3200), tag="dump"),
     ],
@@ -191,6 +191,12 @@ opt = lhc.lhcb1.match(
     targets=opt1.targets + opt2.targets,
     vary=xt.VaryList(vir5rb1 + vir6b1),
 )
+
+degx, degy = get_phase(lhc)
+
+while degx < -33:
+    opt.targets[14].value -= 0.002; opt.step(40); degx, degy = get_phase(lhc)
+    print(degx, degy)
 
 prrrr
 
