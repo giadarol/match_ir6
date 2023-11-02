@@ -77,7 +77,7 @@ vir6b1 = [
     "kq9.r6b1",
     "kq5.r6b1",
     "kqt12.r6b1",
-    "kq4.l6b1",
+    # "kq4.l6b1",
     "kqt13.l6b1",
     "kq8.r6b1",
     "kq10.r6b1",
@@ -151,11 +151,10 @@ def bydump(tw):
 def bdump(tw):
     return np.sqrt(bxdump(tw) * bydump(tw))
 
-# GreaterThan = xt.GreaterThanAux
-# LessThan = xt.LessThanAux
 GreaterThan = xt.GreaterThan
 LessThan = xt.LessThan
-Range = xt.Range
+# GreaterThan = xt.GreaterThanAux
+# LessThan = xt.LessThanAux
 opt2 = lhc.lhcb1.match(
     solve=False,
     ele_start="ip5",
@@ -166,7 +165,7 @@ opt2 = lhc.lhcb1.match(
             "betx bety alfx alfy mux muy dx dpx".split(), value=t1, at=xt.END, tag="sq"
         ),
         TPhase("mux", 7.44496, "mkd.h5l6.b1", "tclpx.4r5.b1", tag="mkdtct"),
-        Target("betx", GreaterThan(430), at="tcdqa.a4r6.b1",tag="tcdq"),
+        Target("betx", GreaterThan(430, mode='sigmoid', sigma=0.0001), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(145), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(170), at="tcdsa.4l6.b1",tag="tcdq"),
         # Target("dx", Range(-0.7, 0.7), at="mqy.5l6.b1",tag="disp"),
@@ -195,10 +194,18 @@ opt = lhc.lhcb1.match(
     vary=xt.VaryList(vir5rb1 + vir6b1),
 )
 
+kvals0 = opt.get_knob_values(0)
+for vv in opt.vary:
+    if vv.name in kvals0:
+        step_guess = kvals0[vv.name] * 0.01
+        if vv.step < step_guess:
+            vv.step = step_guess
+
+
 degx, degy = get_phase(lhc)
 
 t1 = time.time()
-while degx < -30:
+while degx < -20:
     opt.targets[14].value -= 0.002; opt.step(20); degx, degy = get_phase(lhc)
     print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
 t2 = time.time()
@@ -219,14 +226,15 @@ print(f'Initial solution took {t2-t1:.2f} s')
 print(f'Refining solution took {t4-t3:.2f} s')
 
 knobs_initial = opt.get_knob_values(0)
-knobs_solution = opt.get_knob_values()
-lhc.metadata["knobs_solution"] = knobs_solution
+knobs_optimized = opt.get_knob_values()
+lhc.metadata["knobs_optimized"] = knobs_optimized
+lhc.metadata["knobs_initial"] = knobs_initial
 lhc.to_json("hllhc_optimized_mkdtct.json")
 
 lhc.vars.update(knobs_initial)
 tw0 = lhc.lhcb1.twiss()
 
-lhc.vars.update(knobs_solution)
+lhc.vars.update(knobs_optimized)
 tw1 = lhc.lhcb1.twiss()
 
 s_elem = lhc.lhcb1.get_s_position()
@@ -252,5 +260,26 @@ ax3.plot(tw0.s, tw0.bety, label='initial')
 ax3.plot(tw1.s, tw1.bety, label='optimized')
 ax3.set_ylabel(r"$\beta_y$ [m]")
 ax3.legend()
+
+
+plt.figure(2)
+ax1 = plt.subplot(3, 1, 1, sharex=ax1)
+mask= np.abs(k1*l) > 0
+ax1.bar(np.array(s_elem)[mask], (k1*l)[mask], width=l[mask], align='edge')
+ax1.axhline(0, color='k')
+ax1.set_ylabel('k1l')
+ax2 = plt.subplot(3, 1, 2, sharex=ax1)
+ax2.plot(tw0.s, tw0.dx, label='initial')
+ax2.plot(tw1.s, tw1.dx, label='optimized')
+ax2.set_ylabel(r"$D_x$ [m]")
+ax2.legend()
+ax3 = plt.subplot(3, 1, 3, sharex=ax1, sharey=ax2)
+ax3.plot(tw0.s, tw0.dy, label='initial')
+ax3.plot(tw1.s, tw1.dy, label='optimized')
+ax3.set_ylabel(r"$D_y$ [m]")
+ax3.legend()
+
+
+
 plt.show()
 
