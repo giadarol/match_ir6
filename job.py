@@ -174,30 +174,33 @@ opt2 = lhc.lhcb1.match(
         Target("bety", GreaterThan(145), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(170), at="tcdsa.4l6.b1",tag="tcdq"),
         # Target("dx", Range(-0.7, 0.7), at="mqy.5l6.b1",tag="disp"),
-        Target("dx", GreaterThan(-0.7), at="mqy.5l6.b1",tag="disp"),
+        Target("dx", GreaterThan(-0.7, mode='sigmoid', sigma_rel=0.0001), at="mqy.5l6.b1",tag="disp"),
         Target("dx", LessThan(    0.7), at="mqy.5l6.b1", tag="disp"),
-        Target("dx", GreaterThan(-0.7), at="mqy.4r6.b1", tag="disp"),
+        Target("dx", GreaterThan(-0.7, mode='sigmoid', sigma_rel=0.0001), at="mqy.4r6.b1", tag="disp"),
         Target("dx", LessThan(    0.7), at="mqy.4r6.b1", tag="disp"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcsp.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcsp.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.0001), "tcsp.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcdqa.b4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcdqa.b4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.0001), "tcdqa.b4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcdqa.c4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcdqa.c4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.0001), "tcdqa.c4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
         TPhase("mux", LessThan(   0.25 + 4 / 360.0), "tcdqa.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0), "tcdqa.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
-        Target(bdump, GreaterThan(4500), tag="dump"),
-        Target(bxdump,GreaterThan(4000), tag="dump"),
-        Target(bydump,GreaterThan(3200), tag="dump"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.0001), "tcdqa.a4r6.b1", "mkd.h5l6.b1", tag="mkdtcdq"),
+        Target(bdump, GreaterThan(4500, mode='sigmoid', sigma_rel=0.0001), tag="dump"),
+        Target(bxdump,GreaterThan(4000, mode='sigmoid', sigma_rel=0.0001), tag="dump"),
+        Target(bydump,GreaterThan(3200, mode='sigmoid', sigma_rel=0.0001), tag="dump"),
     ],
     vary=[],
 )
+
+
 
 opt = lhc.lhcb1.match(
     solve=False,assert_within_tol=False,
     targets=opt1.targets + opt2.targets,
     vary=xt.VaryList(vir5rb1 + vir6b1),
 )
+
 
 kvals0 = opt.get_knob_values(0)
 for vv in opt.vary:
@@ -283,6 +286,16 @@ ax3.plot(tw0.s, tw0.dy, label='initial')
 ax3.plot(tw1.s, tw1.dy, label='optimized')
 ax3.set_ylabel(r"$D_y$ [m]")
 ax3.legend()
+
+
+plt.figure(101)
+x = np.linspace(-20, 20, 1000)
+plt.plot(x, [opt.targets[18].value.auxtarget(xx) for xx in x])
+
+plt.figure(102)
+x = np.linspace(-1000, 1000, 1000)
+plt.plot(x, [opt.targets[15].value.auxtarget(xx) for xx in x])
+
 
 
 
