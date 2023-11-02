@@ -1,4 +1,5 @@
 import time
+from functools import partial
 
 import xtrack as xt
 import xdeps as xd
@@ -153,8 +154,12 @@ def bdump(tw):
 
 GreaterThan = xt.GreaterThan
 LessThan = xt.LessThan
+
+# GreaterThan = partial(xt.GreaterThan, mode='sigmoid', sigma_rel=0.001)
+# LessThan = partial(xt.LessThan, mode='sigmoid', sigma_rel=0.001)
 # GreaterThan = xt.GreaterThanAux
 # LessThan = xt.LessThanAux
+
 opt2 = lhc.lhcb1.match(
     solve=False,
     ele_start="ip5",
@@ -165,7 +170,7 @@ opt2 = lhc.lhcb1.match(
             "betx bety alfx alfy mux muy dx dpx".split(), value=t1, at=xt.END, tag="sq"
         ),
         TPhase("mux", 7.44496, "mkd.h5l6.b1", "tclpx.4r5.b1", tag="mkdtct"),
-        Target("betx", GreaterThan(430, mode='sigmoid', sigma=0.0001), at="tcdqa.a4r6.b1",tag="tcdq"),
+        Target("betx", GreaterThan(430), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(145), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(170), at="tcdsa.4l6.b1",tag="tcdq"),
         # Target("dx", Range(-0.7, 0.7), at="mqy.5l6.b1",tag="disp"),
