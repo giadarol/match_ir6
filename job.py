@@ -115,6 +115,7 @@ opt1 = lhc.lhcb1.match(
     solve=False,
     ele_start="ip5",
     ele_stop="e.ds.r5.b1",
+    default_tol={None: 1e-8, "betx": 1e-6, "bety": 1e-6},
     twiss_init=xt.TwissInit(betx=0.5, bety=0.5),
     targets=[
         xt.TargetSet(
@@ -164,6 +165,7 @@ opt2 = lhc.lhcb1.match(
     solve=False,
     ele_start="ip5",
     ele_stop="e.ds.r6.b1",
+    default_tol={None: 1e-8, "betx": 1e-6, "bety": 1e-6},
     twiss_init=xt.TwissInit(betx=0.075, bety=0.18),
     targets=[
         TSet(
@@ -215,7 +217,7 @@ degx, degy = get_phase(lhc)
 t1 = time.time()
 while degx < -25:
     opt.targets[14].value -= 0.002; opt.step(20); degx, degy = get_phase(lhc)
-    print(f'phix = {degx:.2f}CF deg, penalty = {opt.log().penalty[-1]}')
+    print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
 t2 = time.time()
 
 print('Refining solution')
