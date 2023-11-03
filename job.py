@@ -155,6 +155,7 @@ def bdump(tw):
 
 GreaterThan = xt.GreaterThan
 LessThan = xt.LessThan
+Range = xt.Range
 
 # GreaterThan = partial(xt.GreaterThan, mode='smooth', sigma_rel=0.001)
 # LessThan = partial(xt.LessThan, mode='smooth', sigma_rel=0.001)
@@ -168,34 +169,25 @@ opt2 = lhc.lhcb1.match(
     default_tol={None: 1e-8, "betx": 1e-6, "bety": 1e-6},
     twiss_init=xt.TwissInit(betx=0.075, bety=0.18),
     targets=[
-        TSet(
-            "betx bety alfx alfy mux muy dx dpx".split(), value=t1, at=xt.END, tag="sq"
-        ),
-        TPhase("mux", 7.44496, "mkd.h5l6.b1", "tclpx.4r5.b1", tag="mkdtct"),
+        TSet("betx bety alfx alfy mux muy dx dpx".split(), value=t1, at=xt.END, tag="sq"),
+        TPhase("mux", 7.44496, ele_stop="mkd.h5l6.b1", ele_start="tclpx.4r5.b1", tag="mkdtct"),
         Target("betx", GreaterThan(430, mode='smooth', sigma_rel=0.1), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(145, mode='smooth', sigma_rel=0.1), at="tcdqa.a4r6.b1",tag="tcdq"),
         Target("bety", GreaterThan(170, mode='smooth', sigma_rel=0.1), at="tcdsa.4l6.b1",tag="tcdq"),
-        # Target("dx", Range(-0.7, 0.7), at="mqy.5l6.b1",tag="disp"),
-        Target("dx",  GreaterThan(-0.7, mode='smooth', sigma_rel=0.1), at="mqy.5l6.b1",tag="disp"),
-        Target("dx",  LessThan(    0.7, mode='smooth', sigma_rel=0.1), at="mqy.5l6.b1", tag="disp"),
-        Target("dx",  GreaterThan(-0.7, mode='smooth', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
-        Target("dx",  LessThan(    0.7, mode='smooth', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        Target(bdump, GreaterThan(4500, mode='smooth', sigma_rel=0.05), tag="dump"),
-        Target(bxdump,GreaterThan(4000, mode='smooth', sigma_rel=0.05), tag="dump"),
-        Target(bydump,GreaterThan(3200, mode='smooth', sigma_rel=0.05), tag="dump"),
+        Target("dx",  Range(-0.7, 0.7, mode='smooth', sigma_rel=0.1), at="mqy.5l6.b1",tag="disp"),
+        Target("dx",  Range(-0.7, 0.7, mode='smooth', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
+        TPhase("mux", Range(0.25 - 4 / 360.0, 0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1),
+               ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", Range(0.25 - 4 / 360.0, 0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1),
+               ele_stop="tcdqa.b4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", Range(0.25 - 4 / 360.0, 0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1),
+               ele_stop="tcdqa.c4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        Target(bdump, GreaterThan(4500, mode='smooth', sigma_rel=0.01), tag="dump"),
+        Target(bxdump,GreaterThan(4000, mode='smooth', sigma_rel=0.01), tag="dump"),
+        Target(bydump,GreaterThan(3200, mode='smooth', sigma_rel=0.01), tag="dump"),
     ],
     vary=[],
 )
-
-
 
 opt = lhc.lhcb1.match(
     solve=False,assert_within_tol=False,
@@ -290,11 +282,11 @@ for ax in [ax2, ax3, ax4, ax5]:
 ax2.legend()
 
 plt.figure(101)
-x = np.linspace(-20, 20, 1000)
+x = np.linspace(-20, 20, 10000)
 plt.plot(x, [opt.targets[18].value.auxtarget(xx) for xx in x])
 
 plt.figure(102)
-x = np.linspace(-1000, 1000, 1000)
+x = np.linspace(-1000, 1000, 10000)
 plt.plot(x, [opt.targets[15].value.auxtarget(xx) for xx in x])
 
 
