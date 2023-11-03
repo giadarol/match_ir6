@@ -208,9 +208,8 @@ while degx < -20:
     print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
 t2 = time.time()
 
-prrrrr
-
 print('Refining solution')
+opt.n_bi_sections = 6
 t3 = time.time()
 pen = opt.log().penalty[-1]
 while pen>1e-9:
