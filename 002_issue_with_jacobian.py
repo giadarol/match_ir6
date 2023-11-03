@@ -200,95 +200,88 @@ opt = lhc.lhcb1.match(
 )
 
 
-degx, degy = get_phase(lhc)
+# Reproduce issue
+opt.targets[14].value = 7.362960000000009
+lhc.vars.update({'kqt13.r5b1': -0.0022877224551007738,
+ 'kq8.r5b1': -0.007138655310595913,
+ 'kq7.r5b1': 0.008493633025800633,
+ 'kq5.r5b1': 0.0009858720588893752,
+ 'kqtl11.r5b1': -0.0010331018026608473,
+ 'kq10.r5b1': -0.007397085034797899,
+ 'kq9.r5b1': 0.006703539090152135,
+ 'kq6.r5b1': -0.0024068911419632827,
+ 'kqt12.r5b1': -0.004488122378270206,
+ 'kq4.r5b1': -0.000942533595881166,
+ 'kqtl11.r6b1': 0.002577921086915818,
+ 'kqt13.r6b1': 0.0055704986478204935,
+ 'kq9.r6b1': -0.006665349152169336,
+ 'kq5.r6b1': -0.006595215337611925,
+ 'kqt12.r6b1': 0.0009355611978655791,
+ 'kqt13.l6b1': -0.0023683793151235083,
+ 'kq8.r6b1': 0.00916371233983537,
+ 'kq10.r6b1': 0.006998652558807122,
+ 'kqtl11.l6b1': -0.001992994717659459,
+ 'kqt12.l6b1': -0.005710414671951595,
+ 'kq8.l6b1': -0.007149828831124582,
+ 'kq10.l6b1': -0.007560215100255281,
+ 'kq5.l6b1': 0.007613380060698968,
+ 'kq9.l6b1': 0.0066723409649584045,
+ 'kq4.r6b1': 0.0056397007801390715})
+opt._add_point_to_log()
+opt.solver.max_rel_penaly_increase = np.inf
+opt.step(1)
 
-t1 = time.time()
-while degx < -20:
-    opt.targets[14].value -= 0.002; opt.step(20); degx, degy = get_phase(lhc)
-    print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
-t2 = time.time()
 
 prrrrr
 
-print('Refining solution')
-t3 = time.time()
-pen = opt.log().penalty[-1]
-while pen>1e-9:
-    opt.step(20); degx, degy = get_phase(lhc)
-    pen = opt.log().penalty[-1]
-    tol_met = opt.log().tol_met[-1]
-    print(f'phix = {degx:.2f} deg, penalty = {pen}')
-    if np.isnan(pen):
-        break
+for vv in opt.vary:
+    new_val = lhc.vv[vv.name] + vv.step
+    if new_val < vv.limits[1]:
+        lhc.vv[vv.name] = new_val
 
-t4 = time.time()
-print(f'Initial solution took {t2-t1:.2f} s')
-print(f'Refining solution took {t4-t3:.2f} s')
+upper_0 = opt.targets[-8].value.upper
+jac_zero = opt.solver._last_jac[-8, :].copy()
 
-knobs_initial = opt.get_knob_values(0)
-knobs_optimized = opt.get_knob_values()
-lhc.metadata["knobs_optimized"] = knobs_optimized
-lhc.metadata["knobs_initial"] = knobs_initial
-lhc.to_json("hllhc_optimized_mkdtct.json")
+# incriminated jacobian
+opt._err.get_jacobian(opt.solver._last_jac_x)[-8, :]
 
-lhc.vars.update(knobs_initial)
-tw0 = lhc.lhcb1.twiss()
+du_vect = np.linspace(-1e-2, 1e-2, 101)
+jac_lines = np.zeros((len(du_vect), len(opt.solver._last_jac[-8, :])))
+for ii, du in enumerate(du_vect):
+    print(ii)
+    opt.targets[-8].value.upper = upper_0 + du
+    jac_lines[ii, :] = opt._err.get_jacobian(opt.solver._last_jac_x)[-8, :]
+    
+prrrr
 
-lhc.vars.update(knobs_optimized)
-tw1 = lhc.lhcb1.twiss()
+du_vect = np.logspace(-20, -3, 100)
 
-s_elem = lhc.lhcb1.get_s_position()
-k1 = lhc.lhcb1.attr["k1"]
-l = lhc.lhcb1.attr["length"]
+jac_lines = np.zeros((len(du_vect), len(opt.solver._last_jac[-8, :])))
+for ii, du in enumerate(du_vect):
+    print(ii)
+    opt.reload(0)
+    opt.targets[-8].value.upper = upper_0 + du
+    try:
+        opt.step(1)
+    except ValueError as err:
+        print(err)
 
-import matplotlib.pyplot as plt
-plt.close("all")
-
-
-nemitt_x = 2.5e-6
-gemitt_x = nemitt_x / tw0.beta0 / tw0.gamma0
-dp_p = 2e-4
-
-plt.figure(2, figsize=(6.4, 4.8*1.5))
-ax1 = plt.subplot(5, 1, 1)
-mask= np.abs(k1*l) > 0
-ax1.bar(np.array(s_elem)[mask], (k1*l)[mask], width=l[mask], align='edge')
-ax1.axhline(0, color='k')
-ax1.set_ylabel('k1l')
-plt.legend()
-ax2 = plt.subplot(5, 1, 2, sharex=ax1)
-ax2.plot(tw0.s, tw0.betx, label='initial')
-ax2.plot(tw1.s, tw1.betx, label='optimized')
-ax2.set_ylabel(r"$\beta_x$ [m]")
-ax3 = plt.subplot(5, 1, 3, sharex=ax1, sharey=ax2)
-ax3.plot(tw0.s, tw0.bety, label='initial')
-ax3.plot(tw1.s, tw1.bety, label='optimized')
-ax3.set_ylabel(r"$\beta_y$ [m]")
-ax4 = plt.subplot(5, 1, 4, sharex=ax1)
-ax4.plot(tw0.s, tw0.dx, label='initial')
-ax4.plot(tw1.s, tw1.dx, label='optimized')
-ax4.set_ylabel(r"$D_x$ [m]")
-ax5 = plt.subplot(5, 1, 5, sharex=ax1)
-plt.plot(tw0.s, np.sqrt(tw0.betx * gemitt_x + (tw0.dx * dp_p)**2), label='initial')
-plt.plot(tw1.s, np.sqrt(tw1.betx * gemitt_x + (tw1.dx * dp_p)**2), label='optimized')
-ax5.set_ylabel(r"$\sigma_x$ [m]")
-plt.suptitle(f"Emittance = {nemitt_x*1e6:.2f} um - RMS momentum spread = {dp_p:.2e}"
-             f'\n MKD-TCT phase = {degx:.2f} deg')
-
-for ax in [ax2, ax3, ax4, ax5]:
-    ax.grid(True)
-ax2.legend()
-
-plt.figure(101)
-x = np.linspace(-20, 20, 10000)
-plt.plot(x, [opt.targets[18].value.auxtarget(xx) for xx in x])
-
-plt.figure(102)
-x = np.linspace(-1000, 1000, 10000)
-plt.plot(x, [opt.targets[15].value.auxtarget(xx) for xx in x])
+    jac_lines[ii, :] = opt.solver._last_jac[-8, :]
 
 
+# This crushes
+opt.targets[-4].value.upper *= 1.01
+opt.targets[-6].value.upper *= 1.01
+opt.targets[-8].value.upper *= 1.01
+
+opt.step()
 
 
-plt.show()
+# opt.targets[-4].freeze()
+# opt.targets[-6].freeze()
+# opt.targets[-8].freeze()
+
+# opt.step(20)
+
+
 
