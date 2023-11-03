@@ -156,8 +156,8 @@ def bdump(tw):
 GreaterThan = xt.GreaterThan
 LessThan = xt.LessThan
 
-# GreaterThan = partial(xt.GreaterThan, mode='sigmoid', sigma_rel=0.001)
-# LessThan = partial(xt.LessThan, mode='sigmoid', sigma_rel=0.001)
+# GreaterThan = partial(xt.GreaterThan, mode='smooth', sigma_rel=0.001)
+# LessThan = partial(xt.LessThan, mode='smooth', sigma_rel=0.001)
 # GreaterThan = xt.GreaterThanAux
 # LessThan = xt.LessThanAux
 
@@ -172,25 +172,25 @@ opt2 = lhc.lhcb1.match(
             "betx bety alfx alfy mux muy dx dpx".split(), value=t1, at=xt.END, tag="sq"
         ),
         TPhase("mux", 7.44496, "mkd.h5l6.b1", "tclpx.4r5.b1", tag="mkdtct"),
-        Target("betx", GreaterThan(430, mode='sigmoid', sigma_rel=0.1), at="tcdqa.a4r6.b1",tag="tcdq"),
-        Target("bety", GreaterThan(145, mode='sigmoid', sigma_rel=0.1), at="tcdqa.a4r6.b1",tag="tcdq"),
-        Target("bety", GreaterThan(170, mode='sigmoid', sigma_rel=0.1), at="tcdsa.4l6.b1",tag="tcdq"),
+        Target("betx", GreaterThan(430, mode='smooth', sigma_rel=0.1), at="tcdqa.a4r6.b1",tag="tcdq"),
+        Target("bety", GreaterThan(145, mode='smooth', sigma_rel=0.1), at="tcdqa.a4r6.b1",tag="tcdq"),
+        Target("bety", GreaterThan(170, mode='smooth', sigma_rel=0.1), at="tcdsa.4l6.b1",tag="tcdq"),
         # Target("dx", Range(-0.7, 0.7), at="mqy.5l6.b1",tag="disp"),
-        Target("dx",  GreaterThan(-0.7, mode='sigmoid', sigma_rel=0.1), at="mqy.5l6.b1",tag="disp"),
-        Target("dx",  LessThan(    0.7, mode='sigmoid', sigma_rel=0.1), at="mqy.5l6.b1", tag="disp"),
-        Target("dx",  GreaterThan(-0.7, mode='sigmoid', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
-        Target("dx",  LessThan(    0.7, mode='sigmoid', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        Target(bdump, GreaterThan(4500, mode='sigmoid', sigma_rel=0.001), tag="dump"),
-        Target(bxdump,GreaterThan(4000, mode='sigmoid', sigma_rel=0.001), tag="dump"),
-        Target(bydump,GreaterThan(3200, mode='sigmoid', sigma_rel=0.001), tag="dump"),
+        Target("dx",  GreaterThan(-0.7, mode='smooth', sigma_rel=0.1), at="mqy.5l6.b1",tag="disp"),
+        Target("dx",  LessThan(    0.7, mode='smooth', sigma_rel=0.1), at="mqy.5l6.b1", tag="disp"),
+        Target("dx",  GreaterThan(-0.7, mode='smooth', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
+        Target("dx",  LessThan(    0.7, mode='smooth', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
+        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='smooth', sigma_rel=0.1), ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        Target(bdump, GreaterThan(4500, mode='smooth', sigma_rel=0.05), tag="dump"),
+        Target(bxdump,GreaterThan(4000, mode='smooth', sigma_rel=0.05), tag="dump"),
+        Target(bydump,GreaterThan(3200, mode='smooth', sigma_rel=0.05), tag="dump"),
     ],
     vary=[],
 )
@@ -287,7 +287,7 @@ plt.suptitle(f"Emittance = {nemitt_x*1e6:.2f} um - RMS momentum spread = {dp_p:.
 
 for ax in [ax2, ax3, ax4, ax5]:
     ax.grid(True)
-ax1.legend()
+ax2.legend()
 
 plt.figure(101)
 x = np.linspace(-20, 20, 1000)
