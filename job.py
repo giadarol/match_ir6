@@ -172,25 +172,25 @@ opt2 = lhc.lhcb1.match(
             "betx bety alfx alfy mux muy dx dpx".split(), value=t1, at=xt.END, tag="sq"
         ),
         TPhase("mux", 7.44496, "mkd.h5l6.b1", "tclpx.4r5.b1", tag="mkdtct"),
-        Target("betx", GreaterThan(430, mode='sigmoid', sigma_rel=0.001), tol=0.1, at="tcdqa.a4r6.b1",tag="tcdq"),
-        Target("bety", GreaterThan(145, mode='sigmoid', sigma_rel=0.001), tol=0.1, at="tcdqa.a4r6.b1",tag="tcdq"),
-        Target("bety", GreaterThan(170, mode='sigmoid', sigma_rel=0.001), tol=0.1, at="tcdsa.4l6.b1",tag="tcdq"),
+        Target("betx", GreaterThan(430, mode='sigmoid', sigma_rel=0.1), at="tcdqa.a4r6.b1",tag="tcdq"),
+        Target("bety", GreaterThan(145, mode='sigmoid', sigma_rel=0.1), at="tcdqa.a4r6.b1",tag="tcdq"),
+        Target("bety", GreaterThan(170, mode='sigmoid', sigma_rel=0.1), at="tcdsa.4l6.b1",tag="tcdq"),
         # Target("dx", Range(-0.7, 0.7), at="mqy.5l6.b1",tag="disp"),
-        Target("dx",  GreaterThan(-0.7, mode='sigmoid', sigma_rel=0.001), tol=0.01, at="mqy.5l6.b1",tag="disp"),
-        Target("dx",  LessThan(    0.7, mode='sigmoid', sigma_rel=0.001), tol=0.01, at="mqy.5l6.b1", tag="disp"),
-        Target("dx",  GreaterThan(-0.7, mode='sigmoid', sigma_rel=0.001), tol=0.01, at="mqy.4r6.b1", tag="disp"),
-        Target("dx",  LessThan(    0.7, mode='sigmoid', sigma_rel=0.001), tol=0.01, at="mqy.4r6.b1", tag="disp"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.001), tol=0.1 / 360, ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.001), tol=0.1 / 360, ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.001), tol=0.1 / 360, ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.001), tol=0.1 / 360, ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.001), tol=0.1 / 360, ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.001), tol=0.1 / 360, ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.001), tol=0.1 / 360, ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.001), tol=0.1 / 360, ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        Target(bdump, GreaterThan(4500, mode='sigmoid', sigma_rel=0.001), tol=10., tag="dump"),
-        Target(bxdump,GreaterThan(4000, mode='sigmoid', sigma_rel=0.001), tol=10., tag="dump"),
-        Target(bydump,GreaterThan(3200, mode='sigmoid', sigma_rel=0.001), tol=10., tag="dump"),
+        Target("dx",  GreaterThan(-0.7, mode='sigmoid', sigma_rel=0.1), at="mqy.5l6.b1",tag="disp"),
+        Target("dx",  LessThan(    0.7, mode='sigmoid', sigma_rel=0.1), at="mqy.5l6.b1", tag="disp"),
+        Target("dx",  GreaterThan(-0.7, mode='sigmoid', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
+        Target("dx",  LessThan(    0.7, mode='sigmoid', sigma_rel=0.1), at="mqy.4r6.b1", tag="disp"),
+        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcsp.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.b4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.c4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", LessThan(   0.25 + 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TPhase("mux", GreaterThan(0.25 - 4 / 360.0, mode='sigmoid', sigma_rel=0.1), ele_stop="tcdqa.a4r6.b1",ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        Target(bdump, GreaterThan(4500, mode='sigmoid', sigma_rel=0.001), tag="dump"),
+        Target(bxdump,GreaterThan(4000, mode='sigmoid', sigma_rel=0.001), tag="dump"),
+        Target(bydump,GreaterThan(3200, mode='sigmoid', sigma_rel=0.001), tag="dump"),
     ],
     vary=[],
 )
@@ -215,7 +215,7 @@ for vv in opt.vary:
 degx, degy = get_phase(lhc)
 
 t1 = time.time()
-while degx < -25:
+while degx < -20:
     opt.targets[14].value -= 0.002; opt.step(20); degx, degy = get_phase(lhc)
     print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
 t2 = time.time()
@@ -254,41 +254,40 @@ l = lhc.lhcb1.attr["length"]
 import matplotlib.pyplot as plt
 plt.close("all")
 
-plt.figure(1)
-ax1 = plt.subplot(3, 1, 1)
+
+nemitt_x = 2.5e-6
+gemitt_x = nemitt_x / tw0.beta0 / tw0.gamma0
+dp_p = 2e-4
+
+plt.figure(2, figsize=(6.4, 4.8*1.5))
+ax1 = plt.subplot(5, 1, 1)
 mask= np.abs(k1*l) > 0
 ax1.bar(np.array(s_elem)[mask], (k1*l)[mask], width=l[mask], align='edge')
 ax1.axhline(0, color='k')
 ax1.set_ylabel('k1l')
-ax2 = plt.subplot(3, 1, 2, sharex=ax1)
+plt.legend()
+ax2 = plt.subplot(5, 1, 2, sharex=ax1)
 ax2.plot(tw0.s, tw0.betx, label='initial')
 ax2.plot(tw1.s, tw1.betx, label='optimized')
 ax2.set_ylabel(r"$\beta_x$ [m]")
-ax2.legend()
-ax3 = plt.subplot(3, 1, 3, sharex=ax1, sharey=ax2)
+ax3 = plt.subplot(5, 1, 3, sharex=ax1, sharey=ax2)
 ax3.plot(tw0.s, tw0.bety, label='initial')
 ax3.plot(tw1.s, tw1.bety, label='optimized')
 ax3.set_ylabel(r"$\beta_y$ [m]")
-ax3.legend()
+ax4 = plt.subplot(5, 1, 4, sharex=ax1)
+ax4.plot(tw0.s, tw0.dx, label='initial')
+ax4.plot(tw1.s, tw1.dx, label='optimized')
+ax4.set_ylabel(r"$D_x$ [m]")
+ax5 = plt.subplot(5, 1, 5, sharex=ax1)
+plt.plot(tw0.s, np.sqrt(tw0.betx * gemitt_x + (tw0.dx * dp_p)**2), label='initial')
+plt.plot(tw1.s, np.sqrt(tw1.betx * gemitt_x + (tw1.dx * dp_p)**2), label='optimized')
+ax5.set_ylabel(r"$\sigma_x$ [m]")
+plt.suptitle(f"Emittance = {nemitt_x*1e6:.2f} um - RMS momentum spread = {dp_p:.2e}"
+             f'\n MKD-TCT phase = {degx:.2f} deg')
 
-
-plt.figure(2)
-ax1 = plt.subplot(3, 1, 1, sharex=ax1)
-mask= np.abs(k1*l) > 0
-ax1.bar(np.array(s_elem)[mask], (k1*l)[mask], width=l[mask], align='edge')
-ax1.axhline(0, color='k')
-ax1.set_ylabel('k1l')
-ax2 = plt.subplot(3, 1, 2, sharex=ax1)
-ax2.plot(tw0.s, tw0.dx, label='initial')
-ax2.plot(tw1.s, tw1.dx, label='optimized')
-ax2.set_ylabel(r"$D_x$ [m]")
-ax2.legend()
-ax3 = plt.subplot(3, 1, 3, sharex=ax1, sharey=ax2)
-ax3.plot(tw0.s, tw0.dy, label='initial')
-ax3.plot(tw1.s, tw1.dy, label='optimized')
-ax3.set_ylabel(r"$D_y$ [m]")
-ax3.legend()
-
+for ax in [ax2, ax3, ax4, ax5]:
+    ax.grid(True)
+ax1.legend()
 
 plt.figure(101)
 x = np.linspace(-20, 20, 1000)
