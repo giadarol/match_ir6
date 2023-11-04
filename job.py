@@ -197,6 +197,7 @@ opt = lhc.lhcb1.match(
     solve=False,assert_within_tol=False,
     targets=opt1.targets + opt2.targets,
     vary=xt.VaryList(vir5rb1 + vir6b1),
+    solver_options=dict(max_rel_penalty_increase=2.),
 )
 
 
@@ -209,7 +210,6 @@ while degx < -21:
 t2 = time.time()
 
 print('Refining solution')
-opt.n_bi_sections = 6
 t3 = time.time()
 pen = opt.log().penalty[-1]
 while pen>1e-9:
