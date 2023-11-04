@@ -154,7 +154,7 @@ def bdump(tw):
     return np.sqrt(bxdump(tw) * bydump(tw))
 
 GreaterThan = partial(xt.GreaterThan, mode='smooth', sigma_rel=0.05)
-LessThan = partial(xt.LessThan, mode='smooth')
+LessThan = partial(xt.LessThan, mode='smooth', sigma_rel=0.05)
 
 # GreaterThan = partial(xt.GreaterThan, mode='smooth', sigma_rel=0.001)
 # LessThan = partial(xt.LessThan, mode='smooth', sigma_rel=0.001)
@@ -203,8 +203,8 @@ opt = lhc.lhcb1.match(
 degx, degy = get_phase(lhc)
 
 t1 = time.time()
-while degx < -20:
-    opt.targets[14].value -= 0.002; opt.step(20); degx, degy = get_phase(lhc)
+while degx < -21:
+    opt.targets[14].value -= 0.01; opt.step(20); degx, degy = get_phase(lhc)
     print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
 t2 = time.time()
 
