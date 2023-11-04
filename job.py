@@ -217,7 +217,7 @@ while pen>1e-9:
     pen = opt.log().penalty[-1]
     tol_met = opt.log().tol_met[-1]
     print(f'phix = {degx:.2f} deg, penalty = {pen}')
-    if np.isnan(pen):
+    if np.all([cc=='y' for cc in tol_met]):
         break
 
 t4 = time.time()
