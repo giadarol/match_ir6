@@ -153,7 +153,7 @@ def bydump(tw):
 def bdump(tw):
     return np.sqrt(bxdump(tw) * bydump(tw))
 
-GreaterThan = partial(xt.GreaterThan, mode='smooth')
+GreaterThan = partial(xt.GreaterThan, mode='smooth', sigma_rel=0.05)
 LessThan = partial(xt.LessThan, mode='smooth')
 
 # GreaterThan = partial(xt.GreaterThan, mode='smooth', sigma_rel=0.001)
