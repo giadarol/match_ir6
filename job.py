@@ -15,8 +15,10 @@ tw = lhc.twiss()
 
 tw.lhcb1.rows["ip.*"].cols["betx bety"]
 
-t1 = lhc.lhcb1.twiss(ele_start="ip5", ele_stop="e.ds.r6.b1", betx=0.075, bety=0.18)
-t2 = lhc.lhcb2.twiss(ele_start="ip5", ele_stop="e.ds.r6.b2", betx=0.075, bety=0.18)
+t1 = lhc.lhcb1.twiss(ele_start="ip5", ele_stop="e.ds.r6.b1",
+                     twiss_init=xt.TwissInit(betx=0.075, bety=0.18))
+t2 = lhc.lhcb2.twiss(ele_start="ip5", ele_stop="e.ds.r6.b2",
+                     twiss_init=xt.TwissInit(betx=0.075, bety=0.18))
 
 # lhc.vars.load_madx_optics_file("acc-models-lhc/strengths/round/opt_round_150_1500.madx")
 
@@ -24,15 +26,26 @@ t2 = lhc.lhcb2.twiss(ele_start="ip5", ele_stop="e.ds.r6.b2", betx=0.075, bety=0.
 
 
 def get_phase(lhc):
+
     tw = lhc.twiss()
-    twiss_init = tw.lhcb1.get_twiss_init("mkd.h5l6.b1")
+
+    # # Original (to be re-enabled when loop-around is deployed)
+    # twiss_init = tw.lhcb1.get_twiss_init("mkd.h5l6.b1")
+    # twiss_init.mux = 0
+    # mux = lhc.lhcb1.twiss(
+    #     ele_start="mkd.h5l6.b1", ele_stop="tctpxh.4l5.b1", twiss_init=twiss_init
+    # ).mux[-1]
+    # dmux1 = (mux * 2 - np.round(mux * 2)) * 180
+
+    # Temporary (to be removed when loop-around is deployed)
+    twiss_init = tw.lhcb1.get_twiss_init("tctpxh.4l5.b1")
     twiss_init.mux = 0
-    mux = lhc.lhcb1.twiss(
-        ele_start="mkd.h5l6.b1", ele_stop="tctpxh.4l5.b1", twiss_init=twiss_init
+    mux = tw.lhcb1.qx - lhc.lhcb1.twiss(
+        ele_start="tctpxh.4l5.b1", ele_stop="mkd.h5l6.b1", twiss_init=twiss_init
     ).mux[-1]
     dmux1 = (mux * 2 - np.round(mux * 2)) * 180
 
-    twiss_init = tw.lhcb2.get_twiss_init("mkd.h5r6.b2").reverse()
+    twiss_init = tw.lhcb2.get_twiss_init("mkd.h5r6.b2").reverse() # To go to b4
     twiss_init.mux = 0
     mux = lhc.lhcb2.twiss(
         ele_start="mkd.h5r6.b2",
@@ -202,6 +215,7 @@ opt = lhc.lhcb1.match(
 
 
 degx, degy = get_phase(lhc)
+print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
 
 t1 = time.time()
 while degx < -21:
