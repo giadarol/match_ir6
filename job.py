@@ -295,6 +295,7 @@ ax2.legend()
 plt.figure(101)
 x = np.linspace(-20, 20, 10000)
 plt.plot(x, [opt.targets[18].value.auxtarget(xx) for xx in x])
+plt.plot(x, [opt.targets[18].transform(xx) for xx in x])
 
 plt.figure(102)
 x = np.linspace(-1000, 1000, 10000)
