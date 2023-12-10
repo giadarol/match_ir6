@@ -114,10 +114,10 @@ vir6b2 = [
 ]
 
 
-opt1 = lhc.lhcb1.match(
+opt1 = lhc.lhcb2.match(
     solve=False,
     ele_start="ip5",
-    ele_stop="e.ds.r5.b1",
+    ele_stop="e.ds.r5.b2",
     default_tol={None: 1e-8, "betx": 1e-6, "bety": 1e-6},
     twiss_init=xt.TwissInit(betx=0.5, bety=0.5),
     targets=[
@@ -141,7 +141,7 @@ def bxdump(tw):
     ld = 761
     bx = tw["betx", "ip6"]
     ax = tw["alfx", "ip6"]
-    bxdump = bx - 2 * ld * ax + ld**2 * (1 + ax**2) / bx
+    bxdump = bx + 2 * ld * ax + ld**2 * (1 + ax**2) / bx
     return bxdump
 
 
@@ -149,7 +149,7 @@ def bydump(tw):
     ld = 761
     by = tw["bety", "ip6"]
     ay = tw["alfy", "ip6"]
-    bydump = by - 2 * ld * ay + ld**2 * (1 + ay**2) / by
+    bydump = by + 2 * ld * ay + ld**2 * (1 + ay**2) / by
     return bydump
 
 
