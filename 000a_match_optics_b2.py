@@ -164,31 +164,34 @@ LessThan = partial(xt.LessThan, mode='smooth', sigma_rel=0.05)
 # GreaterThan = xt.GreaterThanAux
 # LessThan = xt.LessThanAux
 
+tw_start2 = lhc.lhcb2.twiss(ele_start="e.ds.l5.b2", ele_stop="ip5",
+                            twiss_init=xt.TwissInit(betx=0.075, bety=0.18, element_name='ip5'))
+twinit_at_start = tw_start2.get_twiss_init("e.ds.l5.b2")
 
-opt2 = lhc.lhcb1.match(
+opt2 = lhc.lhcb2.match(
     solve=False,
-    ele_start="ip5",
-    ele_stop="e.ds.r6.b1",
+    ele_start="e.ds.l5.b2",
+    ele_stop="e.ds.r6.b2",
     default_tol={None: 1e-8, "betx": 1e-6, "bety": 1e-6},
-    twiss_init=xt.TwissInit(betx=0.075, bety=0.18),
+    twiss_init=twinit_at_start,
     targets=[
-        TSet("betx bety alfx alfy mux muy dx dpx".split(), value=t1, at=xt.END, tag="sq"),
-        TPhase("mux", 7.44496, ele_stop="mkd.h5l6.b1", ele_start="tclpx.4r5.b1", tag="mkdtct"),
-        Target("betx", GreaterThan(430), at="tcdqa.a4r6.b1", tag="tcdq"),
-        Target("bety", GreaterThan(145), at="tcdqa.a4r6.b1", tag="tcdq"),
-        Target("bety", GreaterThan(170), at="tcdsa.4l6.b1",  tag="tcdq"),
-        Target("dx",   GreaterThan(-0.7),  at="mqy.5l6.b1",  tag="disp"),
-        Target("dx",   LessThan(    0.7),  at="mqy.5l6.b1",  tag="disp"),
-        Target("dx",   GreaterThan(-0.7),  at="mqy.4r6.b1",  tag="disp"),
-        Target("dx",   LessThan(    0.7),  at="mqy.4r6.b1",  tag="disp"),
-        TPhase("mux",  GreaterThan(0.25 - 4 / 360.0), ele_stop="tcsp.a4r6.b1",  ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux",  LessThan(   0.25 + 4 / 360.0), ele_stop="tcsp.a4r6.b1",  ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux",  GreaterThan(0.25 - 4 / 360.0), ele_stop="tcdqa.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux",  LessThan(   0.25 + 4 / 360.0), ele_stop="tcdqa.a4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux",  GreaterThan(0.25 - 4 / 360.0), ele_stop="tcdqa.b4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux",  LessThan(   0.25 + 4 / 360.0), ele_stop="tcdqa.b4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux",  GreaterThan(0.25 - 4 / 360.0), ele_stop="tcdqa.c4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
-        TPhase("mux",  LessThan(   0.25 + 4 / 360.0), ele_stop="tcdqa.c4r6.b1", ele_start="mkd.h5l6.b1", tag="mkdtcdq"),
+        TSet("betx bety alfx alfy mux muy dx dpx".split(), value=t2, at=xt.END, tag="sq"),
+        TPhase("mux", 7.8587, ele_stop="mkd.h5r6.b2", ele_start="tclpx.4l5.b2", tag="mkdtct"),
+        Target("betx", GreaterThan(430), at="tcdqa.a4l6.b2", tag="tcdq"),
+        Target("bety", GreaterThan(145), at="tcdqa.a4l6.b2", tag="tcdq"),
+        Target("bety", GreaterThan(170), at="tcdsa.4r6.b2",  tag="tcdq"),
+        Target("dx",   GreaterThan(-0.7),  at="mqy.5r6.b2",  tag="disp"),
+        Target("dx",   LessThan(    0.7),  at="mqy.5r6.b2",  tag="disp"),
+        Target("dx",   GreaterThan(-0.7),  at="mqy.4l6.b2",  tag="disp"),
+        Target("dx",   LessThan(    0.7),  at="mqy.4l6.b2",  tag="disp"),
+        TPhase("mux",  GreaterThan(0.25 - 4 / 360.0), ele_start="tcsp.a4l6.b2",  ele_stop="mkd.h5r6.b2", tag="mkdtcdq"),
+        TPhase("mux",  LessThan(   0.25 + 4 / 360.0), ele_start="tcsp.a4l6.b2",  ele_stop="mkd.h5r6.b2", tag="mkdtcdq"),
+        TPhase("mux",  GreaterThan(0.25 - 4 / 360.0), ele_start="tcdqa.a4l6.b2", ele_stop="mkd.h5r6.b2", tag="mkdtcdq"),
+        TPhase("mux",  LessThan(   0.25 + 4 / 360.0), ele_start="tcdqa.a4l6.b2", ele_stop="mkd.h5r6.b2", tag="mkdtcdq"),
+        TPhase("mux",  GreaterThan(0.25 - 4 / 360.0), ele_start="tcdqa.b4l6.b2", ele_stop="mkd.h5r6.b2", tag="mkdtcdq"),
+        TPhase("mux",  LessThan(   0.25 + 4 / 360.0), ele_start="tcdqa.b4l6.b2", ele_stop="mkd.h5r6.b2", tag="mkdtcdq"),
+        TPhase("mux",  GreaterThan(0.25 - 4 / 360.0), ele_start="tcdqa.c4l6.b2", ele_stop="mkd.h5r6.b2", tag="mkdtcdq"),
+        TPhase("mux",  LessThan(   0.25 + 4 / 360.0), ele_start="tcdqa.c4l6.b2", ele_stop="mkd.h5r6.b2", tag="mkdtcdq"),
         Target(bdump, GreaterThan(4500), tag="dump"),
         Target(bxdump,GreaterThan(4000), tag="dump"),
         Target(bydump,GreaterThan(3200), tag="dump"),
@@ -196,28 +199,31 @@ opt2 = lhc.lhcb1.match(
     vary=[],
 )
 
-opt = lhc.lhcb1.match(
+opt = lhc.lhcb2.match(
     solve=False,assert_within_tol=False,
     targets=opt1.targets + opt2.targets,
-    vary=xt.VaryList(vir5rb1 + vir6b1),
+    vary=xt.VaryList(vir5rb2 + vir6b2),
     solver_options=dict(max_rel_penalty_increase=2.),
 )
 
 
-degx, degy = get_phase(lhc)
+_, degx = get_phase(lhc) # second output is b2
 print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
 
 t1 = time.time()
+d_phi_target = 0.005
 while degx < -21:
-    opt.targets[14].value -= 0.01; opt.step(20); degx, degy = get_phase(lhc)
-    print(f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}')
+    opt.targets[14].value += d_phi_target; opt.step(20); _, degx = get_phase(lhc)
+    tag = f'phix = {degx:.2f} deg, penalty = {opt.log().penalty[-1]}'
+    print(tag)
+    opt.add_point_to_log(tag=tag)
 t2 = time.time()
 
 print('Refining solution')
 t3 = time.time()
 pen = opt.log().penalty[-1]
 while pen>1e-9:
-    opt.step(20); degx, degy = get_phase(lhc)
+    opt.step(20); _, degx = get_phase(lhc)
     pen = opt.log().penalty[-1]
     tol_met = opt.log().tol_met[-1]
     print(f'phix = {degx:.2f} deg, penalty = {pen}')
@@ -232,17 +238,14 @@ knobs_initial = opt.get_knob_values(0)
 knobs_optimized = opt.get_knob_values()
 lhc.metadata["knobs_optimized"] = knobs_optimized
 lhc.metadata["knobs_initial"] = knobs_initial
-lhc.to_json("hllhc_optimized_mkdtct.json")
+lhc.to_json("hllhc_optimized_mkdtct_b2.json")
 
 lhc.vars.update(knobs_initial)
-tw0 = lhc.lhcb1.twiss()
+tw0 = lhc.lhcb2.twiss()
 
 lhc.vars.update(knobs_optimized)
-tw1 = lhc.lhcb1.twiss()
+tw1 = lhc.lhcb2.twiss()
 
-s_elem = lhc.lhcb1.get_s_position()
-k1 = lhc.lhcb1.attr["k1"]
-l = lhc.lhcb1.attr["length"]
 
 import matplotlib.pyplot as plt
 plt.close("all")
@@ -253,13 +256,8 @@ gemitt_x = nemitt_x / tw0.beta0 / tw0.gamma0
 dp_p = 2e-4
 
 plt.figure(2, figsize=(6.4, 4.8*1.5))
-ax1 = plt.subplot(5, 1, 1)
-mask= np.abs(k1*l) > 0
-ax1.bar(np.array(s_elem)[mask], (k1*l)[mask], width=l[mask], align='edge')
-ax1.axhline(0, color='k')
-ax1.set_ylabel('k1l')
-plt.legend()
-ax2 = plt.subplot(5, 1, 2, sharex=ax1)
+ax2 = plt.subplot(5, 1, 2)
+ax1 = ax2
 ax2.plot(tw0.s, tw0.betx, label='initial')
 ax2.plot(tw1.s, tw1.betx, label='optimized')
 ax2.set_ylabel(r"$\beta_x$ [m]")
